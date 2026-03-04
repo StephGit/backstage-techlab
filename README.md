@@ -1,6 +1,11 @@
 # Backstage Techlab
 
-Backstage Techlab Description
+This guided hands-on training helps Backstage newbies to get started with the migration of different images.
+
+
+## Techlab last given
+
+not given yet
 
 
 ## Content Sections
@@ -82,7 +87,7 @@ This is only rendered when `enabledModule` in `config.toml` **does not** contain
 Build the image:
 
 ```bash
-docker build [--build-arg TRAINING_HUGO_ENV=...] -t puzzle/backstage-techlab .
+docker build -t puzzle/backstage-techlab .
 ```
 
 Run it locally:
@@ -97,7 +102,7 @@ docker run --rm -p 8080:8080 puzzle/backstage-techlab
 Build the image:
 
 ```bash
-buildah build-using-dockerfile [--build-arg TRAINING_HUGO_ENV=...] -t puzzle/backstage-techlab .
+buildah build-using-dockerfile -t puzzle/backstage-techlab .
 ```
 
 Run it locally:

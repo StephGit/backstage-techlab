@@ -1,31 +1,22 @@
-# CHANGEME
 acendTraining:
   servicePort: 8080
   deployments:
-    - 
-      name: acend
-      replicaCount: 2
+    - name: puzzle
+      replicaCount: 1
       image:
         repository: ghcr.io/puzzle/backstage-techlab
         pullPolicy: Always
         tag: ""
         tagsuffix: ""
       ingress:
-        secretOverride: acend-wildcard
+        emptyTLS: true
+        ingressClassName: openshift-public
+        useDefaultSecret: true
+        labels:
+          public: "true"
         appname: backstage-techlab
-        domain: training.acend.ch
-    - 
-      name: puzzle
-      replicaCount: 2
-      image:
-        repository: ghcr.io/puzzle/backstage-techlab
-        pullPolicy: Always
-        tag: ""
-        tagsuffix: "-puzzle"
-      ingress:
-        secretOverride: acend-wildcard
-        appname: backstage-techlab
-        domain: training.puzzle.ch
+        domainmain: puzzle.ch
+        domain: ocp.cloudscale.puzzle.ch
 
 
 

@@ -25,12 +25,16 @@ RUN wkhtmltopdf --enable-internal-links --enable-local-file-access \
 
 FROM docker.io/nginxinc/nginx-unprivileged:1.29-alpine
 
-LABEL maintainer="acend.ch"
-LABEL org.opencontainers.image.title="acend.ch's Backstage Basics Training"
-LABEL org.opencontainers.image.description="Container with acend.ch's Backstage Techlab content"
-LABEL org.opencontainers.image.authors="acend.ch"
+LABEL maintainer="Puzzle ITC <https://www.puzzle.ch/>"
+LABEL org.opencontainers.image.authors="Puzzle ITC <https://www.puzzle.ch/>"
+LABEL org.opencontainers.image.title="puzzle.ch's Backstage Basics Training"
+LABEL org.opencontainers.image.description="Container with puzzle.ch's Backstage Techlab content for https://backstage-techlab.puzzle.ch/"
 LABEL org.opencontainers.image.source="https://github.com/puzzle/backstage-techlab/"
 LABEL org.opencontainers.image.licenses="CC-BY-SA-4.0"
+
+USER root
+COPY nginx.conf /etc/nginx/nginx.conf
+USER 101
 
 EXPOSE 8080
 
