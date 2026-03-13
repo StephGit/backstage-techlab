@@ -6,17 +6,18 @@ sectionnumber: 2
 
 The Backstage Software Catalog is the heart of your developer portal. It provides a centralized view of all software components, services, APIs, resources, and teams in your organization. In this chapter, you'll learn how to populate and manage the catalog effectively.
 
+
 ## Understanding the Catalog
 
 The catalog uses YAML files to describe entities. Each entity represents something in your software ecosystem:
 
-- **Components**: Individual pieces of software (services, libraries, websites)
-- **APIs**: Interfaces that components provide
-- **Resources**: Infrastructure resources (databases, queues, storage)
-- **Systems**: Collections of components and resources
-- **Domains**: Groups of related systems
-- **Groups**: Teams or organizational units
-- **Users**: Individual people
+* **Components**: Individual pieces of software (services, libraries, websites)
+* **APIs**: Interfaces that components provide
+* **Resources**: Infrastructure resources (databases, queues, storage)
+* **Systems**: Collections of components and resources
+* **Domains**: Groups of related systems
+* **Groups**: Teams or organizational units
+* **Users**: Individual people
 
 {{% alert title="Note" color="primary" %}}
 The catalog uses a declarative approach - you describe what exists, and Backstage takes care of displaying and organizing it.
@@ -60,13 +61,14 @@ spec:
 ```
 
 **Understanding the structure:**
-- `metadata.name`: Unique identifier for the component
-- `metadata.description`: Human-readable description
-- `metadata.annotations`: Additional metadata (like GitHub repository)
-- `metadata.tags`: Labels for filtering and searching
-- `spec.type`: Type of component (service, library, website, etc.)
-- `spec.lifecycle`: Stage of development (experimental, production, deprecated)
-- `spec.owner`: Team or group that owns this component
+
+* `metadata.name`: Unique identifier for the component
+* `metadata.description`: Human-readable description
+* `metadata.annotations`: Additional metadata (like GitHub repository)
+* `metadata.tags`: Labels for filtering and searching
+* `spec.type`: Type of component (service, library, website, etc.)
+* `spec.lifecycle`: Stage of development (experimental, production, deprecated)
+* `spec.owner`: Team or group that owns this component
 
 See the [Backstage Descriptor Format](https://backstage.io/docs/features/software-catalog/descriptor-format/) for more details.
 
@@ -83,14 +85,15 @@ catalog:
         - allow: [Component]
 ```
 
-After restarting, Backstage will automatically pick up the new component. 
+After restarting, Backstage will automatically pick up the new component.
 Navigate to your Backstage catalog and explore the relationships of your component.
 
 Explore the different tabs:
-   - **Overview**: Basic information
-   - **Dependencies**: What this component depends on
-   - **API**: APIs provided by this component
-   - **Docs**: TechDocs documentation (if configured)
+
+* **Overview**: Basic information
+* **Dependencies**: What this component depends on
+* **API**: APIs provided by this component
+* **Docs**: TechDocs documentation (if configured)
 
 Checkout the entity detail by selecting `Inspect entity` in the submenu in the top right corner.
 
@@ -191,9 +194,11 @@ spec:
 Notice how components reference each other through `providesApis` and `consumesApis`. This creates a dependency graph that Backstage visualizes automatically.
 {{% /alert %}}
 
-**Register the Component via URL (GIT)
 
-First you have to push the file in a Git repository! 
+### Register the Component via URL (GIT)
+
+First you have to push the file in a Git repository!
+
 Navigate to the Backstage Home-Page:
 
 1. Click on "Create..." in the sidebar
@@ -201,7 +206,7 @@ Navigate to the Backstage Home-Page:
 3. Enter the URL to your `catalog-info.yaml` file
 4. Click "Analyze" and then "Import"
 
-Checkout the new entities. You can navigate between them by clicking on relations. 
+Checkout the new entities. You can navigate between them by clicking on relations.
 
 ![Backstage Catalog](/docs/02/entities.png)
 
@@ -267,6 +272,7 @@ catalog:
 
 After restarting, when you view components, you'll see the actual team members who own them!
 
+
 ## Best Practices for Catalog Management
 
 As you build out your catalog, keep these best practices in mind:
@@ -283,8 +289,9 @@ As you build out your catalog, keep these best practices in mind:
 ## Summary
 
 In this chapter, you:
-- ✅ Created and registered your first catalog component
-- ✅ Built a complete system with multiple entities
-- ✅ Defined teams and ownership
+
+* ✅ Created and registered your first catalog component
+* ✅ Built a complete system with multiple entities
+* ✅ Defined teams and ownership
 
 Your Backstage catalog is now populated with data that represents your software ecosystem!  

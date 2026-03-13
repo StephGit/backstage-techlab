@@ -6,14 +6,15 @@ sectionnumber: 1
 
 In this chapter, you will set up your local Backstage environment, learn how to start the application in development mode, and explore its core features. This hands-on introduction will give you the foundation needed to customize and extend Backstage for your organization.
 
+
 ## Prerequisites
 
 Before you begin, ensure you have the following installed on your local machine:
 
-- **Node.js**: Version 22 or 24 (Recommendation: nvm or volta)
-- **Package Manager**: Yarn
-- **Source Control**: Git
-- **Container**: Docker or Podman
+* **Node.js**: Version 22 or 24 (Recommendation: nvm or volta)
+* **Package Manager**: Yarn
+* **Source Control**: Git
+* **Container**: Docker or Podman
 
 {{% alert title="Note" color="primary" %}}
 You can verify your Node.js version with `node --version`. If you need to install or update Node.js, we recommend using [nvm](https://github.com/nvm-sh/nvm) or [volta](https://volta.sh/) for easy version management.
@@ -66,10 +67,10 @@ Installing dependencies:
 
 Explore the project structure. You should see:
 
-- `packages/app/` - Frontend React application
-- `packages/backend/` - Backend Node.js application
-- `app-config.yaml` - Main configuration file
-- `catalog-info.yaml` - Catalog entity for the Backstage app itself
+* `packages/app/` - Frontend React application
+* `packages/backend/` - Backend Node.js application
+* `app-config.yaml` - Main configuration file
+* `catalog-info.yaml` - Catalog entity for the Backstage app itself
 
 
 ## Task {{% param sectionnumber %}}.2: Start Backstage in Development Mode
@@ -83,9 +84,10 @@ yarn start
 ```
 
 This command will:
-- Start the backend on `http://localhost:7007`
-- Start the frontend on `http://localhost:3000`
-- Enable hot-reloading for development
+
+* Start the backend on `http://localhost:7007`
+* Start the frontend on `http://localhost:3000`
+* Enable hot-reloading for development
 
 Open your browser and navigate to `http://localhost:3000`. You should see the Backstage home page!
 
@@ -98,7 +100,6 @@ You are currently using the legacy guest token...
 {{% alert title="Note" color="primary" %}}
 This warning is expected for local development. Backstage uses a guest authentication mode by default, which is fine for development purposes. In production, you would configure proper authentication (OAuth, SAML, etc.). You can safely ignore this warning for now.
 {{% /alert %}}
-
 
 
 ### Task {{% param sectionnumber %}}.2.1: Explore the Default Interface
@@ -140,10 +141,11 @@ catalog:
 ```
 
 **Understanding the configuration:**
-- `app.title`: The name displayed in the browser tab
-- `organization.name`: Your organization's name
-- `backend.baseUrl`: Where the backend API is running
-- `catalog`: Configuration for the software catalog
+
+* `app.title`: The name displayed in the browser tab
+* `organization.name`: Your organization's name
+* `backend.baseUrl`: Where the backend API is running
+* `catalog`: Configuration for the software catalog
 
 
 ### Task {{% param sectionnumber %}}.3.1: Customize Your Backstage Instance
@@ -188,7 +190,7 @@ For the moment there's just a basic test to check that the setup is working.
 
 **E2E Tests
 
-For end-to-end tests a [playwright](https://playwright.dev/) setup is ready to use. 
+For end-to-end tests a [playwright](https://playwright.dev/) setup is ready to use.
 
 ```bash
 yarn test:e2e
@@ -213,12 +215,12 @@ This command performs several build steps:
 
 1. **TypeScript Compilation**: Converts all TypeScript code (`.ts`, `.tsx`) to JavaScript
 2. **Frontend Bundling**: Creates an optimized production bundle of the React application
-   - Minifies JavaScript and CSS
-   - Optimizes assets and images
-   - Creates static files ready for deployment
+   * Minifies JavaScript and CSS
+   * Optimizes assets and images
+   * Creates static files ready for deployment
 3. **Backend Bundling**: Packages the Node.js backend application
-   - Bundles all backend code and dependencies
-   - Prepares the backend for deployment
+   * Bundles all backend code and dependencies
+   * Prepares the backend for deployment
 4. **Type Checking**: Validates TypeScript types across the entire codebase
 
 {{% alert title="Note" color="primary" %}}
@@ -230,10 +232,10 @@ The production build artifacts are created in the `dist/` directories of each pa
 
 Now that you have Backstage running locally, consider how this improves Developer Experience (DevEx):
 
-- **Single Pane of Glass**: All your tools and services in one place
-- **Self-Service**: Developers can discover and use resources without waiting
-- **Standardization**: Consistent way to document and organize software
-- **Reduced Cognitive Load**: Less context switching between different tools
+* **Single Pane of Glass**: All your tools and services in one place
+* **Self-Service**: Developers can discover and use resources without waiting
+* **Standardization**: Consistent way to document and organize software
+* **Reduced Cognitive Load**: Less context switching between different tools
 
 In the next chapters, you'll learn how to populate the catalog, create templates, and add plugins to make Backstage truly powerful for your organization.
 
@@ -241,9 +243,10 @@ In the next chapters, you'll learn how to populate the catalog, create templates
 ## Summary
 
 In this chapter, you:
-- ✅ Created a new Backstage application
-- ✅ Explored the default interface
-- ✅ Made your first customization
-- ✅ Ran tests and created a production build
+
+* ✅ Created a new Backstage application
+* ✅ Explored the default interface
+* ✅ Made your first customization
+* ✅ Ran tests and created a production build
 
 Your local Backstage environment is now ready for the next steps!
