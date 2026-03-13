@@ -79,9 +79,11 @@ catalog:
   locations:
     - type: file
       target: ../../backstage-data/my-sample-service/catalog-info.yaml
+      rules:
+        - allow: [Component]
 ```
 
-After saving, Backstage will automatically pick up the new component. 
+After restarting, Backstage will automatically pick up the new component. 
 Navigate to your Backstage catalog and explore the relationships of your component.
 
 Explore the different tabs:
@@ -100,7 +102,7 @@ Checkout the entity detail by selecting `Inspect entity` in the submenu in the t
 
 Let's create a more complex example with multiple components forming a system.
 
-Create a new file `catalog-system.yaml`:
+Create a new file `catalog-info.yaml` and push it to a github repository:
 
 ```yaml
 ---
@@ -208,7 +210,7 @@ Checkout the new entities. You can navigate between them by clicking on relation
 
 Ownership is crucial for accountability. Let's define teams in the catalog.
 
-Create a `catalog-org.yaml` file:
+Create a `catalog-org.yaml` file in the backstage-data folder:
 
 ```yaml
 ---
@@ -258,90 +260,12 @@ Register this in your `app-config.yaml`:
 catalog:
   locations:
     - type: file
-      target: ../../catalog-org.yaml
+      target: ../../backstage-data/catalog-org.yaml
+      rules:
+        - allow: [User, Group]
 ```
 
-Now when you view components, you'll see the actual team members who own them!
-
-
-## Task {{% param sectionnumber %}}.4: Use Catalog Processors
-
-Backstage can automatically discover and import entities from various sources. Let's configure GitHub discovery to automatically find all repositories with `catalog-info.yaml` files.
-
-### Step 1: Create a GitHub Personal Access Token
-
-To allow Backstage to access your GitHub repositories, you need to create a Personal Access Token (PAT):
-
-1. Go to GitHub Settings: [https://github.com/settings/tokens](https://github.com/settings/tokens)
-2. Click **"Generate new token"** → **"Generate new token (classic)"**
-3. Give your token a descriptive name (e.g., "Backstage Catalog Discovery")
-4. Select the following scopes:
-   - `repo` (Full control of private and public repositories) - access private and public repos *
-   - `write:org` (Write org projects) - to write a new repo *
-   - `read:org` (Read org and team membership) - to read organization data
-   - `read:user` (Read user profile data)
-5. Click **"Generate token"**
-6. **Copy the token immediately** - you won't be able to see it again!
-
-\* This will be used in the next chapter.
-
-### Step 2: Set the environment variable
-
-Set the `GITHUB_TOKEN` environment variable with your token:
-
-```bash
-export GITHUB_TOKEN=ghp_your_token_here
-```
-
-**Alternative: Use app-config.local.yaml (not recommended for production)**
-
-For local development only, you can create an `app-config.local.yaml` file (which should be in `.gitignore`):
-
-```yaml
-integrations:
-  github:
-    - host: github.com
-      token: ghp_your_token_here
-```
-
-{{% alert title="Warning" color="warning" %}}
-Never commit tokens directly to your repository! Always use environment variables or secret management tools in production.
-{{% /alert %}}
-
-### Step 3: Configure GitHub integration
-
-Edit your `app-config.yaml` to add GitHub integration:
-
-```yaml
-integrations:
-  github:
-    - host: github.com
-      token: ${GITHUB_TOKEN}
-
-catalog:
-  providers:
-    github:
-      myOrg:
-        organization: 'your-github-org'  # Replace with your GitHub organization
-        catalogPath: '/catalog-info.yaml'
-        filters:
-          branch: 'main'
-          repository: '.*'  # Regex to match all repositories
-        schedule:
-          frequency: { minutes: 30 }
-          timeout: { minutes: 3 }
-```
-
-### Step 4: Restart Backstage
-
-Restart your Backstage instance to apply the changes:
-
-```bash
-yarn start
-```
-
-This configuration will automatically discover all repositories in your GitHub organization that contain a `catalog-info.yaml` file and refresh every 30 minutes!
-
+After restarting, when you view components, you'll see the actual team members who own them!
 
 ## Best Practices for Catalog Management
 
@@ -362,6 +286,5 @@ In this chapter, you:
 - ✅ Created and registered your first catalog component
 - ✅ Built a complete system with multiple entities
 - ✅ Defined teams and ownership
-- ✅ Configured automatic discovery from GitHub
 
 Your Backstage catalog is now populated with data that represents your software ecosystem!  

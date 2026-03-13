@@ -23,7 +23,48 @@ Templates use a declarative YAML format and can integrate with Git providers, CI
 ## Task {{% param sectionnumber %}}.1: Explore Existing Templates
 
 Before creating your own template, let's explore what's available by default.
-**This step uses the github token from the previous task - 2.4 Use Catalog Processors**
+To make the following tasks work you need a GitHub Personal Access Token with the appropriate scopes.
+
+### Step 1: Create a GitHub Personal Access Token
+
+To allow Backstage to access your GitHub repositories, you need to create a Personal Access Token (PAT):
+
+1. Go to GitHub Settings: [https://github.com/settings/tokens](https://github.com/settings/tokens)
+2. Click **"Generate new token"** → **"Generate new token (classic)"**
+3. Give your token a descriptive name (e.g., "Backstage Catalog Discovery")
+4. Select the following scopes:
+   - `repo` (Full control of private and public repositories) - access private and public repos 
+   - `write:org` (Write org projects) - to write a new repo 
+   - `read:org` (Read org and team membership) - to read organization data
+   - `read:user` (Read user profile data)
+5. Click **"Generate token"**
+6. **Copy the token immediately** - you won't be able to see it again!
+
+### Step 2: Set the environment variable
+
+Set the `GITHUB_TOKEN` environment variable with your token:
+
+```bash
+export GITHUB_TOKEN=ghp_your_token_here
+```
+
+**Alternative: Use app-config.local.yaml (not recommended for production)**
+
+For local development only, you can create an `app-config.local.yaml` file (which should be in `.gitignore`):
+
+```yaml
+integrations:
+  github:
+    - host: github.com
+      token: ghp_your_token_here
+```
+
+{{% alert title="Warning" color="warning" %}}
+Never commit tokens directly to your repository! Always use environment variables or secret management tools in production.
+{{% /alert %}}
+
+
+### Step 3: Run the default template
 
 1. Navigate to `http://localhost:3000/create`
 2. Click on `choose` to select the example template
@@ -35,7 +76,7 @@ See the created component via `Open in Catalog`!
 ![Template Result](/docs/03/default_template.png)
 
 
-## Task {{% param sectionnumber %}}.2: Create Your First Template
+<!-- ## Task {{% param sectionnumber %}}.2: Create Your First Template
 
 Let's create a simple template for a Node.js microservice.
 
@@ -46,10 +87,10 @@ You can download the files from here: [Template Data](https://github.com/StephGi
 Create a new directory for your template and add the files there:
 
 ```bash
-mkdir -p ./backstage-data/custom_template
+mkdir -p ./backstage-data/templates
 ...
-ls  ./backstage-data/custom_template   
-nodejs-microservice
+ls  ./backstage-data/templates   
+fullstack-app
 ```
 <details>
   <summary>Analyse the template.yaml </summary>
@@ -193,10 +234,10 @@ Watch as Backstage:
 
 {{% alert title="Note" color="primary" %}}
 You'll need to have GitHub integration configured with appropriate permissions for this to work. See the previous chapter on catalog setup.
-{{% /alert %}}
+{{% /alert %}} -->
 
 
-## Task {{% param sectionnumber %}}.6: Create an Advanced Template with Multiple Steps
+## Task {{% param sectionnumber %}}.2: Create an Advanced Template with Multiple Steps
 
 Let's create a more sophisticated template that includes CI/CD setup and demonstrates advanced features like multiple parameter sections, conditional logic, and multiple fetch steps.
 
@@ -388,7 +429,10 @@ If you have time, try creating a full-stack application:
 Notice how the template adapts based on your selections!
 
 
-## Task {{% param sectionnumber %}}.7: Add Custom Template Actions
+
+
+{{% onlyWhen fullScope %}}
+## Task {{% param sectionnumber %}}.5: Add Custom Template Actions
 
 Backstage allows you to create custom actions for templates. Here's an example of how to add a custom action to send a Slack notification.
 
@@ -437,22 +481,7 @@ export default async function createPlugin(
 Custom actions allow you to integrate templates with any external system - from cloud providers to internal tools.
 {{% /alert %}}
 
-
-## Task {{% param sectionnumber %}}.8: Template Best Practices
-
-As you create templates, follow these best practices:
-
-1. **Start simple**: Begin with basic templates and add complexity gradually
-2. **Use clear parameter names**: Make forms intuitive for developers
-3. **Provide good defaults**: Reduce the number of required fields
-4. **Include documentation**: Add README files and inline comments
-5. **Test thoroughly**: Run templates multiple times before sharing
-6. **Version your templates**: Use Git tags to version template changes
-7. **Collect feedback**: Ask developers what would make templates more useful
-8. **Include CI/CD**: Automate testing and deployment from the start
-9. **Add validation**: Use JSON Schema to validate user input
-10. **Document outputs**: Clearly show what was created and next steps
-
+{{% /onlyWhen %}}
 
 ## Common Template Use Cases
 
@@ -464,7 +493,6 @@ Here are some popular template use cases:
 - **Infrastructure**: Terraform modules or Kubernetes manifests
 - **Libraries**: Shared code libraries with publishing pipelines
 - **Data pipelines**: ETL jobs with scheduling and monitoring
-- **Mobile apps**: iOS/Android app scaffolding
 
 
 ## Summary
@@ -475,7 +503,5 @@ In this chapter, you:
 - ✅ Built a template skeleton with variables
 - ✅ Registered and used your template
 - ✅ Created an advanced multi-step template
-- ✅ Learned about custom template actions
-- ✅ Understood template best practices
 
 Software Templates are one of Backstage's most powerful features for improving developer productivity. By standardizing project creation, you reduce cognitive load and ensure consistency across your organization.  

@@ -4,7 +4,7 @@ weight: 4
 sectionnumber: 4
 ---
 
-Backstage's plugin ecosystem is what makes it truly powerful. Plugins extend Backstage with new functionality, integrations, and visualizations. In this chapter, you'll learn how to discover, install, and configure existing plugins to enhance your developer portal.
+Plugins extend Backstage with new functionality, integrations, and visualizations. In this chapter, you'll learn how to discover, install, and configure existing plugins to enhance your developer portal.
 
 ## Understanding the Plugin Ecosystem
 
@@ -32,134 +32,55 @@ Visit the Backstage Plugin Marketplace:
 Popular plugins include:
 - **Kubernetes**: View and manage Kubernetes resources
 - **GitHub Actions**: Monitor CI/CD pipelines
+- **Gitlab CI/CD**: Monitor CI/CD pipelines
 - **TechDocs**: Documentation platform
-- **Cost Insights**: Cloud cost tracking
-- **SonarQube**: Code quality metrics
-- **PagerDuty**: On-call management
 - **Grafana**: Metrics and dashboards
+- **ArgoCD**: CD pipeline visualization
 
 
-## Task {{% param sectionnumber %}}.2: Install the Kubernetes Plugin
 
-Let's install the Kubernetes plugin to visualize cluster resources directly in Backstage.
+## Task {{% param sectionnumber %}}.4: Use Catalog Processors
 
-**Step 1: Install the frontend plugin**
+Backstage can automatically discover and import entities from various sources. Let's configure GitHub discovery to automatically find all repositories with `catalog-info.yaml` files.
 
-Navigate to your Backstage app directory and install the plugin:
 
-```bash
-cd packages/app
-yarn add @backstage/plugin-kubernetes
-```
+### Step 3: Configure GitHub integration
 
-**Step 2: Add the plugin to your app**
-
-Edit `packages/app/src/components/catalog/EntityPage.tsx` and import the Kubernetes plugin:
-
-```typescript
-import { EntityKubernetesContent } from '@backstage/plugin-kubernetes';
-```
-
-Add a new tab to the service entity page:
-
-```typescript
-const serviceEntityPage = (
-  <EntityLayout>
-    <EntityLayout.Route path="/" title="Overview">
-      {overviewContent}
-    </EntityLayout.Route>
-    
-    <EntityLayout.Route path="/ci-cd" title="CI/CD">
-      {cicdContent}
-    </EntityLayout.Route>
-    
-    <EntityLayout.Route path="/kubernetes" title="Kubernetes">
-      <EntityKubernetesContent refreshIntervalMs={30000} />
-    </EntityLayout.Route>
-    
-    {/* ... other routes ... */}
-  </EntityLayout>
-);
-```
-
-**Step 3: Install the backend plugin**
-
-```bash
-cd packages/backend
-yarn add @backstage/plugin-kubernetes-backend
-```
-
-**Step 4: Configure the backend**
-
-Create `packages/backend/src/plugins/kubernetes.ts`:
-
-```typescript
-import { KubernetesBuilder } from '@backstage/plugin-kubernetes-backend';
-import { Router } from 'express';
-import { PluginEnvironment } from '../types';
-
-export default async function createPlugin(
-  env: PluginEnvironment,
-): Promise<Router> {
-  const { router } = await KubernetesBuilder.createBuilder({
-    logger: env.logger,
-    config: env.config,
-  }).build();
-  return router;
-}
-```
-
-Register the plugin in `packages/backend/src/index.ts`:
-
-```typescript
-import kubernetes from './plugins/kubernetes';
-
-// ... in the main function ...
-const kubernetesEnv = useHotMemoize(module, () => createEnv('kubernetes'));
-apiRouter.use('/kubernetes', await kubernetes(kubernetesEnv));
-```
-
-**Step 5: Configure Kubernetes clusters**
-
-Add cluster configuration to `app-config.yaml`:
+Edit your `app-config.yaml` to add GitHub integration:
 
 ```yaml
-kubernetes:
-  serviceLocatorMethod:
-    type: 'multiTenant'
-  clusterLocatorMethods:
-    - type: 'config'
-      clusters:
-        - url: https://your-cluster-api-server
-          name: production
-          authProvider: 'serviceAccount'
-          serviceAccountToken: ${K8S_TOKEN}
-          skipTLSVerify: false
-          skipMetricsLookup: false
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+
+catalog:
+  providers:
+    github:
+      myOrg:
+        organization: 'your-github-org'  # Replace with your GitHub organization
+        catalogPath: '/catalog-info.yaml'
+        filters:
+          branch: 'main'
+          repository: '.*'  # Regex to match all repositories
+        schedule:
+          frequency: { minutes: 30 }
+          timeout: { minutes: 3 }
 ```
 
-**Step 6: Annotate your components**
+### Step 4: Restart Backstage
 
-Add Kubernetes annotations to your component's `catalog-info.yaml`:
+Restart your Backstage instance to apply the changes:
 
-```yaml
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: my-service
-  annotations:
-    backstage.io/kubernetes-id: my-service
-    backstage.io/kubernetes-namespace: production
-spec:
-  type: service
-  lifecycle: production
-  owner: team-a
+```bash
+yarn start
 ```
 
-Now when you view this component in Backstage, you'll see a Kubernetes tab showing pods, deployments, and services!
+This configuration will automatically discover all repositories in your GitHub organization that contain a `catalog-info.yaml` file and refresh every 30 minutes!
 
 
-## Task {{% param sectionnumber %}}.3: Install the GitHub Actions Plugin
+
+## Task {{% param sectionnumber %}}.2: Install the GitHub Actions Plugin
 
 Let's add CI/CD visibility with the GitHub Actions plugin.
 
@@ -224,7 +145,7 @@ spec:
 Now you can see GitHub Actions workflow runs directly in Backstage!
 
 
-## Task {{% param sectionnumber %}}.4: Setup TechDocs Plugin
+## Task {{% param sectionnumber %}}.3: Setup TechDocs Plugin
 
 TechDocs brings documentation directly into Backstage, making it easy for developers to find and read documentation alongside their services. TechDocs is already included by default, but let's configure it properly and add documentation to a component.
 
@@ -345,113 +266,8 @@ The `backstage.io/techdocs-ref: dir:.` annotation tells Backstage where to find 
 {{% /alert %}}
 
 
-## Task {{% param sectionnumber %}}.5: Install a Monitoring Plugin (Grafana)
 
-Let's add observability with the Grafana plugin.
-
-**Step 1: Install the plugin**
-
-```bash
-cd packages/app
-yarn add @backstage/plugin-grafana
-```
-
-**Step 2: Configure Grafana integration**
-
-Add to `app-config.yaml`:
-
-```yaml
-grafana:
-  domain: https://your-grafana-instance.com
-  unifiedAlerting: true
-```
-
-**Step 3: Add to Entity Page**
-
-Edit `packages/app/src/components/catalog/EntityPage.tsx`:
-
-```typescript
-import { EntityGrafanaDashboardsCard } from '@backstage/plugin-grafana';
-```
-
-Add to the overview content:
-
-```typescript
-const overviewContent = (
-  <Grid container spacing={3} alignItems="stretch">
-    {/* ... other cards ... */}
-    
-    <Grid item md={6}>
-      <EntityGrafanaDashboardsCard />
-    </Grid>
-  </Grid>
-);
-```
-
-**Step 4: Annotate components**
-
-Add Grafana dashboard annotations:
-
-```yaml
-metadata:
-  annotations:
-    grafana/dashboard-selector: 'my-service-dashboard'
-    grafana/alert-label-selector: 'service=my-service'
-```
-
-
-## Task {{% param sectionnumber %}}.6: Install the SonarQube Plugin
-
-Add code quality metrics with SonarQube.
-
-**Step 1: Install the plugin**
-
-```bash
-cd packages/app
-yarn add @backstage/plugin-sonarqube
-```
-
-**Step 2: Install backend plugin**
-
-```bash
-cd packages/backend
-yarn add @backstage/plugin-sonarqube-backend
-```
-
-**Step 3: Configure SonarQube**
-
-Add to `app-config.yaml`:
-
-```yaml
-sonarqube:
-  baseUrl: https://sonarqube.example.com
-  apiKey: ${SONARQUBE_TOKEN}
-```
-
-**Step 4: Add to Entity Page**
-
-```typescript
-import { EntitySonarQubeCard } from '@backstage/plugin-sonarqube';
-
-const overviewContent = (
-  <Grid container spacing={3}>
-    <Grid item md={6}>
-      <EntitySonarQubeCard variant="gridItem" />
-    </Grid>
-  </Grid>
-);
-```
-
-**Step 5: Annotate components**
-
-```yaml
-metadata:
-  annotations:
-    sonarqube.org/project-key: my-service
-```
-
-
-## Task {{% param sectionnumber %}}.7: Create a Custom Home Page with Plugins
+## Task {{% param sectionnumber %}}.4: Create a Custom Home Page with Plugins
 
 Let's customize the Backstage home page to show useful information.
 
@@ -488,8 +304,9 @@ export const HomePage = () => {
 };
 ```
 
+{{% onlyWhen fullScope %}}
 
-## Task {{% param sectionnumber %}}.8: Configure Plugin Permissions
+## Task {{% param sectionnumber %}}.5: Configure Plugin Permissions
 
 Backstage supports fine-grained permissions. Let's configure who can access what.
 
@@ -533,7 +350,7 @@ export default async function createPlugin(
   });
 }
 ```
-
+{{% /onlyWhen %}}
 
 ## Best Practices for Plugin Management
 
